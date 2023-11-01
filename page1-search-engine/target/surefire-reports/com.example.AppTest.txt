@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.example.AppTest
 -------------------------------------------------------------------------------
+<<<<<<< HEAD
 Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 s - in com.example.AppTest
+=======
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s - in com.example.AppTest
+>>>>>>> origin/corpus_parser
