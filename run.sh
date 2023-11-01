@@ -1,0 +1,1 @@
+(cd ./page1-search-engine && mvn package)
