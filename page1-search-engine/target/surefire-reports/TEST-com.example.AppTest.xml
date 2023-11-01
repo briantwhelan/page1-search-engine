@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.example.AppTest" time="0.047" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.example.AppTest" time="0.041" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="20"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.class.path" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine-mvn-template/page1-search-engine/target/test-classes:/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine-mvn-template/page1-search-engine/target/classes:/Users/mingshi/.m2/repository/junit/junit/4.11/junit-4.11.jar:/Users/mingshi/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/mingshi/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-core/8.1.0/lucene-core-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-queryparser/8.1.0/lucene-queryparser-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-queries/8.1.0/lucene-queries-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-sandbox/8.1.0/lucene-sandbox-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-analyzers-common/8.1.0/lucene-analyzers-common-8.1.0.jar:/Users/mingshi/.m2/repository/org/jsoup/jsoup/1.16.1/jsoup-1.16.1.jar:"/>
+    <property name="java.class.path" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine/page1-search-engine/target/test-classes:/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine/page1-search-engine/target/classes:/Users/mingshi/.m2/repository/junit/junit/4.11/junit-4.11.jar:/Users/mingshi/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/mingshi/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-core/8.1.0/lucene-core-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-queryparser/8.1.0/lucene-queryparser-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-queries/8.1.0/lucene-queries-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-sandbox/8.1.0/lucene-sandbox-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-analyzers-common/8.1.0/lucene-analyzers-common-8.1.0.jar:/Users/mingshi/.m2/repository/org/jsoup/jsoup/1.16.1/jsoup-1.16.1.jar:"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.vendor.url" value="https://java.oracle.com/"/>
@@ -13,10 +12,10 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="GB"/>
     <property name="sun.boot.library.path" value="/Users/mingshi/Library/Java/JavaVirtualMachines/openjdk-20.0.2/Contents/Home/lib"/>
-    <property name="sun.java.command" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine-mvn-template/page1-search-engine/target/surefire/surefirebooter15313213226110647800.jar /Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine-mvn-template/page1-search-engine/target/surefire 2023-11-01T14-30-15_422-jvmRun1 surefire1485597936489256628tmp surefire_013674534870001037814tmp"/>
+    <property name="sun.java.command" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine/page1-search-engine/target/surefire/surefirebooter16741053776312392310.jar /Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine/page1-search-engine/target/surefire 2023-11-01T19-16-18_232-jvmRun1 surefire7396472754996635268tmp surefire_0530010127230468022tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine-mvn-template/page1-search-engine/target/test-classes:/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine-mvn-template/page1-search-engine/target/classes:/Users/mingshi/.m2/repository/junit/junit/4.11/junit-4.11.jar:/Users/mingshi/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/mingshi/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-core/8.1.0/lucene-core-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-queryparser/8.1.0/lucene-queryparser-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-queries/8.1.0/lucene-queries-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-sandbox/8.1.0/lucene-sandbox-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-analyzers-common/8.1.0/lucene-analyzers-common-8.1.0.jar:/Users/mingshi/.m2/repository/org/jsoup/jsoup/1.16.1/jsoup-1.16.1.jar:"/>
+    <property name="surefire.test.class.path" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine/page1-search-engine/target/test-classes:/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine/page1-search-engine/target/classes:/Users/mingshi/.m2/repository/junit/junit/4.11/junit-4.11.jar:/Users/mingshi/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/mingshi/.m2/repository/commons-cli/commons-cli/1.4/commons-cli-1.4.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-core/8.1.0/lucene-core-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-queryparser/8.1.0/lucene-queryparser-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-queries/8.1.0/lucene-queries-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-sandbox/8.1.0/lucene-sandbox-8.1.0.jar:/Users/mingshi/.m2/repository/org/apache/lucene/lucene-analyzers-common/8.1.0/lucene-analyzers-common-8.1.0.jar:/Users/mingshi/.m2/repository/org/jsoup/jsoup/1.16.1/jsoup-1.16.1.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/Users/mingshi"/>
     <property name="user.language" value="en"/>
@@ -24,13 +23,13 @@
     <property name="java.version.date" value="2023-07-18"/>
     <property name="java.home" value="/Users/mingshi/Library/Java/JavaVirtualMachines/openjdk-20.0.2/Contents/Home"/>
     <property name="file.separator" value="/"/>
-    <property name="basedir" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine-mvn-template/page1-search-engine"/>
+    <property name="basedir" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine/page1-search-engine"/>
     <property name="java.vm.compressedOopsMode" value="Zero based"/>
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="apple.awt.application.name" value="ForkedBooter"/>
-    <property name="surefire.real.class.path" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine-mvn-template/page1-search-engine/target/surefire/surefirebooter15313213226110647800.jar"/>
+    <property name="surefire.real.class.path" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine/page1-search-engine/target/surefire/surefirebooter16741053776312392310.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="20.0.2+9-78"/>
@@ -46,7 +45,7 @@
     <property name="java.io.tmpdir" value="/var/folders/j4/s37rcpps3kj5ktfxvqhqq3_m0000gn/T/"/>
     <property name="idea.version" value="2023.2.1"/>
     <property name="java.version" value="20.0.2"/>
-    <property name="user.dir" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine-mvn-template/page1-search-engine"/>
+    <property name="user.dir" value="/Users/mingshi/Desktop/JavaProject/GroupProject/page1-search-engine/page1-search-engine"/>
     <property name="os.arch" value="x86_64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="native.encoding" value="UTF-8"/>
@@ -60,64 +59,4 @@
     <property name="java.class.version" value="64.0"/>
   </properties>
   <testcase name="shouldAnswerWithTrue" classname="com.example.AppTest" time="0.003"/>
-=======
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.example.AppTest" time="0.037" tests="1" errors="0" skipped="0" failures="0">
-  <properties>
-    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
-    <property name="java.specification.version" value="11"/>
-    <property name="sun.cpu.isalist" value=""/>
-    <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.class.path" value="/home/brian/github/page1-search-engine/page1-search-engine/target/test-classes:/home/brian/github/page1-search-engine/page1-search-engine/target/classes:/home/brian/.m2/repository/junit/junit/4.11/junit-4.11.jar:/home/brian/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
-    <property name="java.vm.vendor" value="Ubuntu"/>
-    <property name="sun.arch.data.model" value="64"/>
-    <property name="java.vendor.url" value="https://ubuntu.com/"/>
-    <property name="user.timezone" value=""/>
-    <property name="java.vm.specification.version" value="11"/>
-    <property name="os.name" value="Linux"/>
-    <property name="sun.java.launcher" value="SUN_STANDARD"/>
-    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-11-openjdk-amd64/lib"/>
-    <property name="sun.java.command" value="/home/brian/github/page1-search-engine/page1-search-engine/target/surefire/surefirebooter15388286089134547168.jar /home/brian/github/page1-search-engine/page1-search-engine/target/surefire 2023-11-01T12-28-05_615-jvmRun1 surefire12580870760242578640tmp surefire_015308506302849855944tmp"/>
-    <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="/home/brian/github/page1-search-engine/page1-search-engine/target/test-classes:/home/brian/github/page1-search-engine/page1-search-engine/target/classes:/home/brian/.m2/repository/junit/junit/4.11/junit-4.11.jar:/home/brian/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
-    <property name="sun.cpu.endian" value="little"/>
-    <property name="user.home" value="/home/brian"/>
-    <property name="user.language" value="en"/>
-    <property name="java.specification.vendor" value="Oracle Corporation"/>
-    <property name="java.version.date" value="2023-08-24"/>
-    <property name="java.home" value="/usr/lib/jvm/java-11-openjdk-amd64"/>
-    <property name="file.separator" value="/"/>
-    <property name="basedir" value="/home/brian/github/page1-search-engine/page1-search-engine"/>
-    <property name="java.vm.compressedOopsMode" value="32-bit"/>
-    <property name="line.separator" value="&#10;"/>
-    <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="/home/brian/github/page1-search-engine/page1-search-engine/target/surefire/surefirebooter15388286089134547168.jar"/>
-    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
-    <property name="java.runtime.version" value="11.0.20.1+1-post-Ubuntu-0ubuntu122.04"/>
-    <property name="user.name" value="brian"/>
-    <property name="path.separator" value=":"/>
-    <property name="os.version" value="4.19.128-microsoft-standard"/>
-    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
-    <property name="file.encoding" value="UTF-8"/>
-    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
-    <property name="localRepository" value="/home/brian/.m2/repository"/>
-    <property name="java.vendor.url.bug" value="https://bugs.launchpad.net/ubuntu/+source/openjdk-lts"/>
-    <property name="java.io.tmpdir" value="/tmp"/>
-    <property name="java.version" value="11.0.20.1"/>
-    <property name="user.dir" value="/home/brian/github/page1-search-engine/page1-search-engine"/>
-    <property name="os.arch" value="amd64"/>
-    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
-    <property name="sun.os.patch.level" value="unknown"/>
-    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib"/>
-    <property name="java.vm.info" value="mixed mode, sharing"/>
-    <property name="java.vendor" value="Ubuntu"/>
-    <property name="java.vm.version" value="11.0.20.1+1-post-Ubuntu-0ubuntu122.04"/>
-    <property name="java.specification.maintenance.version" value="2"/>
-    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
-    <property name="java.class.version" value="55.0"/>
-  </properties>
-  <testcase name="shouldAnswerWithTrue" classname="com.example.AppTest" time="0.002"/>
->>>>>>> origin/corpus_parser
 </testsuite>
