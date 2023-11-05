@@ -3,6 +3,17 @@ package com.example;
 public class FBIS95_structure {
 
 
+    public String getDocno() {
+        return docno;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getText() {
+        return text;
+    }
 
     private  String docno;
 

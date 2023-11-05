@@ -80,18 +80,14 @@ public class FBIS96_parser {
                 }
             }
         } else {
-            System.out.println("The specified path is not a valid folder.");
+            System.out.println("Not existed");
         }
 
         // Remove readMe file
         this.fbis_file_name_collection.remove("readmefb.txt");
         this.fbis_file_name_collection.remove("readchg.txt");
 
-        // Test
-        System.out.println("Test:");
-        for (String fileName : this.fbis_file_name_collection) {
-            System.out.println(fileName);
-        }
+
 
     }
 
@@ -124,23 +120,37 @@ public class FBIS96_parser {
              */
             // Parase DOC strcgure
             Elements elements_list = doc.getElementsByTag("DOC");
+            ArrayList<FBIS95_structure>my_fbis_container = new ArrayList<>();
 
             for(Element single_element : elements_list)
             {
-
+                System.out.println("docno");
                 Elements doc_no_el = doc.select("DOCNO");
                 String docno_content = doc_no_el.first().text();
+
+
                 System.out.println(docno_content);
-
-
-                Elements text_el = doc.select("TEXT");
-                String text_content = text_el.first().text();
-                System.out.println(text_content);
-
-
+                System.out.println("TITLE");
                 Elements title_el  = doc.getElementsByTag("TI");
                 String title_content = title_el.first().text();
                 System.out.println(title_content);
+
+                System.out.println("text");
+                Elements text_el = doc.select("TEXT");
+                String text_content = text_el.first().text();
+                FBIS_text_augment my_text_augment = new FBIS_text_augment(text_content);
+                // Augment and remove unnessary string such as[ ]
+                String final_string_text = my_text_augment.augment_string();
+
+                System.out.println(final_string_text);
+
+
+
+                FBIS95_structure temp_structure = new FBIS95_structure(docno_content,title_content,final_string_text);
+
+                my_fbis_container.add(temp_structure);
+
+
 
                 System.out.println("----------------");
 
