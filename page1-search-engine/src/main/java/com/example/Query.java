@@ -1,35 +1,58 @@
 package com.example;
 
+public class Query {
 
-public class QueryObject {
+    private String number; // This corresponds to the <num> tag in the dataset
+    private String title; // This corresponds to the <title> tag in the dataset
+    private String description; // This corresponds to the <desc> tag in the dataset
+    private String narrative; // This corresponds to the <narr> tag in the dataset
 
-    private String queryNum;
-    private String queryId;
-    private String title;
-    private String description;
-    private String narrative;
-
-    QueryObject(){
-        this.queryNum = "";
-        this.queryId = "";
-        this.title = "";
-        this.narrative = "";
-        this.description = "";
+    // Constructor without parameters
+    public Query() {
+        // No fields to initialize, default constructor is sufficient
     }
 
-    public String getTitle() { return title; }
+    // Getters and setters for each property
+    public String getNumber() {
+        return number;
+    }
 
-    public String getNarrative() { return narrative; }
+    public void setNumber(String number) {
+        this.number = number;
+    }
 
-    public String getDescription() { return description; }
+    public String getTitle() {
+        return title;
+    }
 
-    public void setTitle(String title) { this.title = title; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public void setNarrative(String narrative) { this.narrative = narrative; }
+    public String getDescription() {
+        return description;
+    }
 
-    public void setQueryId(String queryId) { this.queryId = queryId; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public void setQueryNum(String queryNum) { this.queryNum = queryNum; }
+    public String getNarrative() {
+        return narrative;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setNarrative(String narrative) {
+        this.narrative = narrative;
+    }
+
+    // Override toString method if needed for debugging or logging purposes
+    @Override
+    public String toString() {
+        return "Query{" +
+                "number='" + number + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", narrative='" + narrative + '\'' +
+                '}';
+    }
 }
