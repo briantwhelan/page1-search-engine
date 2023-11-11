@@ -86,18 +86,7 @@ public class TFIDFCalculator {
   }
 
 
-  public static void main(String[] args) {
-// write python code
-    List<String> doc1 = Arrays.asList("Lorem", "ipsum", "dolor", "ipsum", "sit", "ipsum");
 
-
-    TFIDFCalculator calculator = new TFIDFCalculator();
-    double [][]tdMax = calculator.constructTFIDFMatrix(doc1);
-    calculator.printTFMatrix(tdMax);
-
-
-
-  }
 
 
 }
