@@ -7,13 +7,42 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.stream.Collectors;
+/*
+@Author :Mingwei Shi
 
+This class is to receive the content from the topic parser and then remove the stop words and punctuation, followed by tokenizing the
+word
+
+Then, perform the TF-IDF to each term and select the topic five scores.
+
+Then, use the set operation to make the value unique.
+
+Each tf-idf score might contain several terms; select all of them.
+
+Then, repeat the set operation to select unique keyword terms for each query's final keyword collection.
+
+ */
+
+/*
+
+You could generate the query online or offline
+Offline: check out the folder: "./data/queryfile/query.txt";
+ProcessingFromTopicParser myProcess  = new ProcessingFromTopicParser()
+Online receive the input ArrayList<String> my = myProcess.getQueryList();
+ */
 public class ProcessingFromTopicParser {
+	public ArrayList<String> getQueryList() {
+		return queryList;
+	}
+
+	private ArrayList<String>queryList ;
 
 	public ProcessingFromTopicParser() {
+
+		this.run();
 	}
 
 	public String[] stringRemovalNoiseAndToken(String inputString) {
@@ -43,10 +72,11 @@ public class ProcessingFromTopicParser {
 				builderForStopwordRemovaled.append(' ');
 			}
 		}
-
+	// remove punctuation
 		String temp1String = builderForStopwordRemovaled.toString().trim();
-		// Remove puncation
+		// Remove punctuation
 		String[] tokenizedKeywords = temp1String.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
+		// The above line comes from this website
 		// https://stackoverflow.com/questions/18830813/how-can-i-remove-punctuation-from-input-text-in-java
 
 		return tokenizedKeywords;
@@ -59,18 +89,21 @@ public class ProcessingFromTopicParser {
 
 		List<Query> local = my.parseQueries();
 		ArrayList<String> OutputList = new ArrayList<>();
-		for (int i = 0; i < local.size(); i++) {
-			Query temp = local.get(i);
+		for (int indexQuery = 0; indexQuery < local.size(); indexQuery++) {
+			Query temp = local.get(indexQuery);
 			String title = temp.getTitle();
 			String nattive = temp.getNarrative();
 			String desc = temp.getDescription();
+			// Merge the string from title ,narrative and description to
+			// form a full document
+			// in order to perform TF-IDF score
 			String finalString = title + nattive + desc;
-			// System.out.println(finalString);
+
 			String[] tokenizedKeywords = stringRemovalNoiseAndToken(finalString);
 			List<String> tokenizedKeywordsList = Arrays.asList(tokenizedKeywords);
 			TFIDFCalculator calculator = new TFIDFCalculator();
-			// Compution the each one TFIDF score
-			// we have score and term
+			// compute  the each one TFIDF score
+			// we have score and associated  term
 			ArrayList<Double> scoreForTFIDF = new ArrayList<Double>();
 			ArrayList<StructureForTDIDFStorage> myStorageStucture = new ArrayList<>();
 
@@ -82,7 +115,7 @@ public class ProcessingFromTopicParser {
 				myStorageStucture.add(tempS);
 
 			}
-			// Sortding in desecing order
+			// Sorting in descending order
 			Collections.sort(scoreForTFIDF);
 			Collections.reverse(scoreForTFIDF);
 
@@ -133,12 +166,13 @@ public class ProcessingFromTopicParser {
 				currentKeywordsBulder.append(" ");
 			}
 			String finalStringCurrent = currentKeywordsBulder.toString();
-			//System.out.println(finalStringCurrent);
+
 			OutputList.add(finalStringCurrent.trim());
 
 
 
 		}
+		this.queryList= new ArrayList<>(OutputList);
 
 		String filePath = "./data/queryfile/query.txt";
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
@@ -146,7 +180,7 @@ public class ProcessingFromTopicParser {
 				writer.write(line);
 				writer.newLine();
 			}
-			System.out.println("The list has been written to " + filePath);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
