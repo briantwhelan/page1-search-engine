@@ -82,7 +82,7 @@ public class ProcessingFromTopicParser {
 				myStorageStucture.add(tempS);
 
 			}
-			// Sortding in desecingd
+			// Sortding in desecing order
 			Collections.sort(scoreForTFIDF);
 			Collections.reverse(scoreForTFIDF);
 
@@ -133,7 +133,7 @@ public class ProcessingFromTopicParser {
 				currentKeywordsBulder.append(" ");
 			}
 			String finalStringCurrent = currentKeywordsBulder.toString();
-			System.out.println(finalStringCurrent);
+			//System.out.println(finalStringCurrent);
 			OutputList.add(finalStringCurrent.trim());
 
 
