@@ -134,7 +134,7 @@ public class ProcessingFromTopicParser {
 			}
 			String finalStringCurrent = currentKeywordsBulder.toString();
 			System.out.println(finalStringCurrent);
-			OutputList.add(finalStringCurrent);
+			OutputList.add(finalStringCurrent.trim());
 
 
 
