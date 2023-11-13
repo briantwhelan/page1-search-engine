@@ -95,7 +95,7 @@ public class ProcessingFromTopicParser {
 		String []removelist ={"relevant","i.e",
 				"must","also","contain","am","is","will","due","as","it"
 				,"taken","takes","done","even","may","either","claims",
-		"itself",""};
+		"itself","e.g","used"};
 		for (String keyword : processedKeywordsRemovalPunction) {
 			String currentKeywords= keyword;
 			boolean judgeForAdd = true;
