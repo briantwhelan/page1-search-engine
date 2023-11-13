@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 /*
 @Author :Mingwei Shi
@@ -72,14 +74,40 @@ public class ProcessingFromTopicParser {
 				builderForStopwordRemovaled.append(' ');
 			}
 		}
-	// remove punctuation
+		// remove punctuation
 		String temp1String = builderForStopwordRemovaled.toString().trim();
 		// Remove punctuation
-		String[] tokenizedKeywords = temp1String.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
-		// The above line comes from this website
-		// https://stackoverflow.com/questions/18830813/how-can-i-remove-punctuation-from-input-text-in-java
+		String[] tokenizedKeywordsPunction = temp1String.split("\\s+");
+		String[] processedKeywordsRemovalPunction = new String[tokenizedKeywordsPunction.length];
+		// remove the puncation in each string,but if period
+		// within string ,such as "U.S" maintain original
+		// U.S and don't matain the original case
+		for (int i = 0; i < tokenizedKeywordsPunction.length; i++) {
+		//<![a-zA-Z])\p{Punct} to make sure the puncation is not part of Abbreviation
+			//\p{Punct}(?![a-zA-Z]) remove the last puncation
+			processedKeywordsRemovalPunction[i] = tokenizedKeywordsPunction[i].replaceAll("(?<![a-zA-Z])\\p{Punct}|\\p{Punct}(?![a-zA-Z])", "");
+		}
+		// remove relevant and Relevant
+		List<String> filteredRelevantkeywords = new ArrayList<>();
+		for (String keyword : processedKeywordsRemovalPunction) {
+			if (!keyword.equalsIgnoreCase("relevant")) {
+				filteredRelevantkeywords.add(keyword);
+			}
+		}
+		//
+		String[] removeRelevantList =  filteredRelevantkeywords.toArray(new String[0]);
 
-		return tokenizedKeywords;
+		// remove digit number such as 103 ; as these are not keywords
+		List<String> filteredNumericList = new ArrayList<>();
+		for (String keyword : removeRelevantList) {
+
+			if (!keyword.matches("\\d+")) {
+				filteredNumericList.add(keyword);
+			}
+		}
+		String[] finalStringArray =  filteredNumericList.toArray(new String[0]);
+
+		return finalStringArray;
 
 	}
 
@@ -121,7 +149,8 @@ public class ProcessingFromTopicParser {
 
 			ArrayList<Double> firstFiveScore = new ArrayList<>();
 			// top 10
-			for (int getIndex = 0; getIndex < 10; getIndex++) {
+			int topKeywords = 10;
+			for (int getIndex = 0; getIndex < topKeywords; getIndex++) {
 				firstFiveScore.add(scoreForTFIDF.get(getIndex));
 			}
 			//
