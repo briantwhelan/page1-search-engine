@@ -89,10 +89,12 @@ public class ProcessingFromTopicParser {
 			//\p{Punct}(?![a-zA-Z]) remove the last puncation
 			processedKeywordsRemovalPunction[i] = tokenizedKeywordsPunction[i].replaceAll("(?<![a-zA-Z])\\p{Punct}|\\p{Punct}(?![a-zA-Z])", "");
 		}
-		// remove relevant and Relevant
+		// remove non-sense words before fedding into TF-IDF
 		List<String> filteredRelevantkeywords = new ArrayList<>();
+
 		String []removelist ={"relevant","i.e",
-				"must","also","contain","am","is","will","due","as"};
+				"must","also","contain","am","is","will","due","as","it"
+		,"taken","takes","done","even","may","either","claims"};
 		for (String keyword : processedKeywordsRemovalPunction) {
 			String currentKeywords= keyword;
 			boolean judgeForAdd = true;
