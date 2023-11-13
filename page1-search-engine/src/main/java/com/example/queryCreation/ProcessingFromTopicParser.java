@@ -85,7 +85,7 @@ public class ProcessingFromTopicParser {
 		// within string ,such as "U.S" maintain original
 		// U.S and don't matain the original case
 		for (int i = 0; i < tokenizedKeywordsPunction.length; i++) {
-		//<![a-zA-Z])\p{Punct} to make sure the puncation is not part of Abbreviation
+			//<![a-zA-Z])\p{Punct} to make sure the puncation is not part of Abbreviation
 			//\p{Punct}(?![a-zA-Z]) remove the last puncation
 			processedKeywordsRemovalPunction[i] = tokenizedKeywordsPunction[i].replaceAll("(?<![a-zA-Z])\\p{Punct}|\\p{Punct}(?![a-zA-Z])", "");
 		}
@@ -94,7 +94,8 @@ public class ProcessingFromTopicParser {
 
 		String []removelist ={"relevant","i.e",
 				"must","also","contain","am","is","will","due","as","it"
-		,"taken","takes","done","even","may","either","claims"};
+				,"taken","takes","done","even","may","either","claims",
+		"itself",""};
 		for (String keyword : processedKeywordsRemovalPunction) {
 			String currentKeywords= keyword;
 			boolean judgeForAdd = true;
@@ -147,8 +148,25 @@ public class ProcessingFromTopicParser {
 			}
 		}
 
+		// Change UV to ultraviolet
+		// Operaiion for UV
+		// for query 27
+		ArrayList<String>finalList =  new ArrayList<>();
+		for(int indexIndexJ = 0 ;indexIndexJ<splitKeywordsByAntiSlash.size();indexIndexJ++)
+		{
+			String currentWords = splitKeywordsByAntiSlash.get(indexIndexJ);
+			if(currentWords.equalsIgnoreCase("UV"))
+			{
+				finalList.add("ultraviolet");
+			}
+			else{
+				finalList.add(currentWords);
+			}
 
-		return splitKeywordsByAntiSlash.toArray(new String[0]);
+		}
+
+
+		return finalList.toArray(new String[0]);
 
 	}
 
@@ -190,7 +208,7 @@ public class ProcessingFromTopicParser {
 
 			ArrayList<Double> firstFiveScore = new ArrayList<>();
 			// top 10
-			int topKeywords = 10;
+			int topKeywords = 13;
 			for (int getIndex = 0; getIndex < topKeywords; getIndex++) {
 				firstFiveScore.add(scoreForTFIDF.get(getIndex));
 			}
