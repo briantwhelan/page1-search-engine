@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 This class is to receive the content from the topic parser and then remove the stop words and punctuation, followed by tokenizing the
 word
 
-Then, perform the TF-IDF to each term and select the TOP 15 TF-IDF SCORE.
+Then, perform the TF-IDF to each term and select the TOP 10 TF-IDF SCORE.
 
 Then, use the set operation to make the value unique.
 
@@ -91,10 +91,28 @@ public class ProcessingFromTopicParser {
 		}
 		// remove relevant and Relevant
 		List<String> filteredRelevantkeywords = new ArrayList<>();
+		String []removelist ={"relevant","i.e",
+				"must","also","contain","am","is","will","due","as"};
 		for (String keyword : processedKeywordsRemovalPunction) {
-			if (!keyword.equalsIgnoreCase("relevant")) {
+			String currentKeywords= keyword;
+			boolean judgeForAdd = true;
+
+			for(int idexR= 0 ;idexR <removelist.length;idexR++)
+			{
+				String loopKeywords = removelist[idexR];
+				if(loopKeywords.equalsIgnoreCase(currentKeywords))
+				{
+					judgeForAdd = false;
+				}
+			}
+			if(judgeForAdd == false)
+			{
+				// pass
+			}
+			else{
 				filteredRelevantkeywords.add(keyword);
 			}
+
 		}
 		//
 		String[] removeRelevantList =  filteredRelevantkeywords.toArray(new String[0]);
@@ -170,7 +188,7 @@ public class ProcessingFromTopicParser {
 
 			ArrayList<Double> firstFiveScore = new ArrayList<>();
 			// top 10
-			int topKeywords = 15;
+			int topKeywords = 10;
 			for (int getIndex = 0; getIndex < topKeywords; getIndex++) {
 				firstFiveScore.add(scoreForTFIDF.get(getIndex));
 			}
