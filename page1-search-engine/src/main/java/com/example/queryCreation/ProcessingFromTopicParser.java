@@ -109,9 +109,26 @@ public class ProcessingFromTopicParser {
 				filteredNumericList.add(keyword.toLowerCase());
 			}
 		}
-		String[] finalStringArray =  filteredNumericList.toArray(new String[0]);
+		String[] finalStringArrayTemp =  filteredNumericList.toArray(new String[0]);
+		// for each string if contain "/",such as "damage/casualties" into two string into a arraylist
+		ArrayList<String> splitKeywordsByAntiSlash = new ArrayList<>();
 
-		return finalStringArray;
+		// Iterate over the array of tokenized keywords
+		for (String keyword : finalStringArrayTemp) {
+
+			if (keyword.contains("/")) {
+
+				String[] parts = keyword.split("/");
+
+				splitKeywordsByAntiSlash.addAll(Arrays.asList(parts));
+			} else {
+
+				splitKeywordsByAntiSlash.add(keyword);
+			}
+		}
+
+
+		return splitKeywordsByAntiSlash.toArray(new String[0]);
 
 	}
 
