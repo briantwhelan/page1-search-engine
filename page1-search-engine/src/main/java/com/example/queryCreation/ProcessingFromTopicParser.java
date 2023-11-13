@@ -18,12 +18,14 @@ import java.util.stream.Collectors;
 This class is to receive the content from the topic parser and then remove the stop words and punctuation, followed by tokenizing the
 word
 
-Then, perform the TF-IDF to each term and select the topic five scores.
+Then, perform the TF-IDF to each term and select the TOP 15 TF-IDF SCORE.
 
 Then, use the set operation to make the value unique.
 
 Each tf-idf score might contain several terms; select all of them.
 
+
+TOP 15 TF-IDF SCORE
 Then, repeat the set operation to select unique keyword terms for each query's final keyword collection.
 
  */
@@ -102,7 +104,9 @@ public class ProcessingFromTopicParser {
 		for (String keyword : removeRelevantList) {
 
 			if (!keyword.matches("\\d+")) {
-				filteredNumericList.add(keyword);
+
+				// to lowercase
+				filteredNumericList.add(keyword.toLowerCase());
 			}
 		}
 		String[] finalStringArray =  filteredNumericList.toArray(new String[0]);
@@ -149,7 +153,7 @@ public class ProcessingFromTopicParser {
 
 			ArrayList<Double> firstFiveScore = new ArrayList<>();
 			// top 10
-			int topKeywords = 10;
+			int topKeywords = 15;
 			for (int getIndex = 0; getIndex < topKeywords; getIndex++) {
 				firstFiveScore.add(scoreForTFIDF.get(getIndex));
 			}
