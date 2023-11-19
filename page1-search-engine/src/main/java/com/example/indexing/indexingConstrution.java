@@ -1,181 +1,139 @@
 package com.example.indexing;
 
-import com.example.fbisparser.Fbis95Structure;
-import com.example.fbisparser.Fbis96Parser;
-import com.example.fr.FederalRegisterDocument;
-import com.example.fr.FederalRegisterReader;
-import com.example.ft.FinancialTimesDocument;
-import com.example.ft.FinancialTimesReader;
-import com.example.latimes.LosAngelesTimesDocument;
-import com.example.latimes.LosAngelesTimesReader;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.similarities.BM25Similarity;
-import org.apache.lucene.search.similarities.Similarity;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
+
+import com.example.fbisparser.Fbis95Structure;
+import com.example.fbisparser.Fbis96Parser;
+import com.example.fr.FederalRegisterDocument;
+import com.example.fr.FederalRegisterReader;
+import com.example.fr.FederalRegisterTextAugment;
+import com.example.ft.FinancialTimesDocument;
+import com.example.ft.FinancialTimesReader;
+import com.example.ft.FinancialTimesTextAugment;
+import com.example.latimes.LosAngelesTimesDocument;
+import com.example.latimes.LosAngelesTimesReader;
+import com.example.latimes.LosAngelesTimesTextAugment;
 
 public class indexingConstrution {
 
+	public static final String FT_PATH = "./data/ft";
+	public static final String LATIMES_PATH = "./data/latimes";
+	public static final String FR_PATH = "./data/fr94";
+	public static final String DIRTORY_ADDRESS = "./dir";
+	private final String DOC_NUMBE_MARCO = "docno";
+	private final String TITLE_MARCO = "title";
+	private final String CONTENT_MARCO = "content";
+	private ArrayList<Document> LuenceAllDocuemnt;
+	public indexingConstrution() throws IOException {
+		this.LuenceAllDocuemnt = new ArrayList<>();
 
-  public ArrayList<Document> getLuenceAllDocuemnt() {
-    return LuenceAllDocuemnt;
-  }
+		this.createDoucmentSameFieldForAllCorpus();
+		// construcntion indexing
+		// this.constructIndex();
 
-  private  ArrayList<Document> LuenceAllDocuemnt;
+	}
 
-  public indexingConstrution() throws IOException {
-    this.LuenceAllDocuemnt = new ArrayList<>();
+	public ArrayList<Document> getLuenceAllDocuemnt() {
+		return LuenceAllDocuemnt;
+	}
 
-    this.createDoucmentSameFieldForAllCorpus();
-    // construcntion indexing
-    this.constructIndex();
+	public void createDoucmentSameFieldForAllCorpus() throws IOException {
 
-  }
+		System.out.println("Start loading FBIS");
+		// 1 FBIS
+		Fbis96Parser myFbisParser = new Fbis96Parser();
+		myFbisParser.loadFiles();
+		ArrayList<Fbis95Structure> myFbisCollection = myFbisParser.getMyFbisContainer();
 
-  private final String DOC_NUMBE_MARCO = "docno";
-  private final String TITLE_MARCO = "title";
-  public static final String FT_PATH = "./data/ft";
-  public static final String LATIMES_PATH = "./data/latimes";
-  public static final String FR_PATH = "./data/fr94";
-  public static final String DIRTORY_ADDRESS = "./dir";
+		for (int indexi = 0; indexi < myFbisCollection.size(); indexi++) {
+			Fbis95Structure currentDocument = myFbisCollection.get(indexi);
 
-  private final String CONTENT_MARCO = "content";
+			String tempDOC = currentDocument.getDocno();
+			String tempTitle = currentDocument.getTitle().toLowerCase();
+			String tempContent = currentDocument.getTitle().toLowerCase();
+			//
+			Document temPDocuement = new Document();
+			// DOCNO not cut
+			temPDocuement.add(new StringField(DOC_NUMBE_MARCO, tempDOC, Field.Store.YES));
+			temPDocuement.add(new TextField(TITLE_MARCO, tempTitle, Field.Store.YES));
+			temPDocuement.add(new TextField(CONTENT_MARCO, tempContent, Field.Store.YES));
 
-  public void createDoucmentSameFieldForAllCorpus() throws IOException {
+			this.LuenceAllDocuemnt.add(temPDocuement);
+		}
+		// 2 FINAL time
+		ArrayList<FinancialTimesDocument> myfinalTime = FinancialTimesReader.readDocuments(FT_PATH);
+		for (int indexi = 0; indexi < myfinalTime.size(); indexi++) {
 
-// 1 FBIS
-    Fbis96Parser myFbisParser = new Fbis96Parser();
-    myFbisParser.loadFiles();
-    ArrayList<Fbis95Structure> myFbisCollection = myFbisParser.getMyFbisContainer();
+			FinancialTimesDocument currentDocument = myfinalTime.get(indexi);
 
-    for (int indexi = 0; indexi < myFbisCollection.size(); indexi++) {
-      Fbis95Structure currentDocument = myFbisCollection.get(indexi);
+			String tempDOC = currentDocument.getNumber();
+			String tempTitle = currentDocument.getHeadline().toLowerCase();
+			String tempContent = currentDocument.getText().toLowerCase().trim();
 
-      String tempDOC = currentDocument.getDocno();
-      String tempTitle = currentDocument.getTitle();
-      String tempContent = currentDocument.getTitle();
-      //
-      Document temPDocuement = new Document();
-      // DOCNO not cut
-      temPDocuement.add(new StringField(DOC_NUMBE_MARCO, tempDOC, Field.Store.YES));
-      temPDocuement.add(new TextField(TITLE_MARCO, tempTitle, Field.Store.YES));
-      temPDocuement.add(new TextField(CONTENT_MARCO, tempContent, Field.Store.YES));
+			FinancialTimesTextAugment myFinalTimeAugment = new FinancialTimesTextAugment(tempTitle, tempContent);
 
-      this.LuenceAllDocuemnt.add(temPDocuement);
-    }
-    // 2 FINAL time
-    ArrayList<FinancialTimesDocument> myfinalTime = FinancialTimesReader.readDocuments(FT_PATH);
-    for (int indexi = 0; indexi < myfinalTime.size(); indexi++) {
+			Document temPDocuement = new Document();
+			temPDocuement.add(new StringField(DOC_NUMBE_MARCO, tempDOC, Field.Store.YES));
+			temPDocuement.add(new TextField(TITLE_MARCO, tempTitle, Field.Store.YES));
+			temPDocuement.add(new TextField(CONTENT_MARCO, tempContent, Field.Store.YES));
+			this.LuenceAllDocuemnt.add(temPDocuement);
 
-      FinancialTimesDocument currentDocument = myfinalTime.get(indexi);
+		}
+		// 3 FR
+		ArrayList<FederalRegisterDocument> myFR = FederalRegisterReader.readDocuments(FR_PATH);
 
+		for (int indexi = 0; indexi < myFR.size(); indexi++) {
 
-      String tempDOC = currentDocument.getNumber();
-      String tempTitle = currentDocument.getHeadline();
-      String tempContent = currentDocument.getText();
-      Document temPDocuement = new Document();
-      temPDocuement.add(new StringField(DOC_NUMBE_MARCO, tempDOC, Field.Store.YES));
-      temPDocuement.add(new TextField(TITLE_MARCO, tempTitle, Field.Store.YES));
-      temPDocuement.add(new TextField(CONTENT_MARCO, tempContent, Field.Store.YES));
-      this.LuenceAllDocuemnt.add(temPDocuement);
+			FederalRegisterDocument currentDocument = myFR.get(indexi);
 
-    }
-    // 3 FR
-    ArrayList<FederalRegisterDocument> myFR = FederalRegisterReader.readDocuments(FR_PATH);
+			String tempDOC = currentDocument.getNumber();
+			String tempTitle = currentDocument.getTitle().toLowerCase();
+			String tempContent = currentDocument.getText();
 
-    for (int indexi = 0; indexi < myFR.size(); indexi++) {
+			FederalRegisterTextAugment myFRAugment = new FederalRegisterTextAugment(tempContent);
+			String frAugment = myFRAugment.augmentString().trim();
 
-      FederalRegisterDocument currentDocument = myFR.get(indexi);
+			Document temPDocuement = new Document();
+			temPDocuement.add(new StringField(DOC_NUMBE_MARCO, tempDOC, Field.Store.YES));
+			temPDocuement.add(new TextField(TITLE_MARCO, tempTitle, Field.Store.YES));
+			temPDocuement.add(new TextField(CONTENT_MARCO, tempContent, Field.Store.YES));
+			this.LuenceAllDocuemnt.add(temPDocuement);
 
+		}
+		// 4 LosAngelesTimesReader.readDocuments(LATIMES_PATH);
 
-      String tempDOC = currentDocument.getNumber();
-      String tempTitle = currentDocument.getTitle();
-      String tempContent = currentDocument.getText();
+		// CONTENT merge graphic and text
 
-      Document temPDocuement = new Document();
-      temPDocuement.add(new StringField(DOC_NUMBE_MARCO, tempDOC, Field.Store.YES));
-      temPDocuement.add(new TextField(TITLE_MARCO, tempTitle, Field.Store.YES));
-      temPDocuement.add(new TextField(CONTENT_MARCO, tempContent, Field.Store.YES));
-      this.LuenceAllDocuemnt.add(temPDocuement);
+		ArrayList<LosAngelesTimesDocument> myLST = LosAngelesTimesReader.readDocuments(LATIMES_PATH);
+		for (int indexi = 0; indexi < myLST.size(); indexi++) {
 
-    }
-    // 4    LosAngelesTimesReader.readDocuments(LATIMES_PATH);
+			LosAngelesTimesDocument currentDocument = myLST.get(indexi);
 
-    ArrayList<LosAngelesTimesDocument> myLST = LosAngelesTimesReader.readDocuments(LATIMES_PATH);
-    for (int indexi = 0; indexi < myLST.size(); indexi++) {
+			String tempDOC = currentDocument.getNumber();
+			String tempTitle = currentDocument.getHeadline();
+			String tempContent = currentDocument.getText();
+			String graphicContent = currentDocument.getGraphic().trim().toLowerCase();
+			String newMergeContent = tempContent + graphicContent;
+			LosAngelesTimesTextAugment myLAaugment = new LosAngelesTimesTextAugment(tempTitle, newMergeContent);
 
-      LosAngelesTimesDocument currentDocument = myLST.get(indexi);
+			String augmentTITLE = myLAaugment.augment_title();
+			String augmentContent = myLAaugment.augment_Content();
 
+			Document temPDocuement = new Document();
+			temPDocuement.add(new StringField(DOC_NUMBE_MARCO, tempDOC, Field.Store.YES));
+			temPDocuement.add(new TextField(TITLE_MARCO, tempTitle, Field.Store.YES));
+			temPDocuement.add(new TextField(CONTENT_MARCO, newMergeContent, Field.Store.YES));
+			this.LuenceAllDocuemnt.add(temPDocuement);
 
-      String tempDOC = currentDocument.getNumber();
-      String tempTitle = currentDocument.getHeadline();
-      String tempContent = currentDocument.getText();
+		}
+		System.out.println("FInishing LOADING documents into memory");
 
-      Document temPDocuement = new Document();
-      temPDocuement.add(new StringField(DOC_NUMBE_MARCO, tempDOC, Field.Store.YES));
-      temPDocuement.add(new TextField(TITLE_MARCO, tempTitle, Field.Store.YES));
-      temPDocuement.add(new TextField(CONTENT_MARCO, tempContent, Field.Store.YES));
-      this.LuenceAllDocuemnt.add(temPDocuement);
+	}
 
-    }
-    System.out.println("FInishing LOADING title");
-
-  }
-
-  public void constructIndex() throws IOException {
-    System.out.println("Starting indexing ");
-    Analyzer mAnalyzer = new StandardAnalyzer();
-    IndexWriterConfig myWriterconfig = new IndexWriterConfig(mAnalyzer);
-
-    myWriterconfig.setMaxBufferedDocs(100000);
-
-    myWriterconfig.setSimilarity(new BM25Similarity());
-
-    Path myindexPath = Paths.get(DIRTORY_ADDRESS);
-    Directory indexDir = FSDirectory.open(myindexPath);
-    // Overwrite seveearl times
-    myWriterconfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-    IndexWriter indexWriter = new IndexWriter(indexDir, myWriterconfig);
-    // add document to the index
-    indexWriter.forceMerge(100000);
-    indexWriter.addDocuments(this.LuenceAllDocuemnt);
-
-
-    indexWriter.close();
-    System.out.println("Finishing indexing  hhh");
-
-    /*
-    float weightForTittle = 0.2f;
-
-    float weightForDescr = 1.1f;
-    QueryParser parser_single_mutiple = null;
-    Map<String, Float> bootssetting3 = new HashMap<>();
-    bootssetting3.put(TITLE_MARCO, weightForTittle);
-    bootssetting3.put(CONTENT_MARCO, weightForDescr);
-    String[] Feature3_CONSTANT_TITLE_DESC_FEATURE = new String[] {TITLE_MARCO, CONTENT_MARCO};
-    parser_single_mutiple =
-        new MultiFieldQueryParser(Feature3_CONSTANT_TITLE_DESC_FEATURE, mAnalyzer, bootssetting3);
-
-    parser_single_mutiple.setAllowLeadingWildcard(true);
-    System.out.println("We select  all two title TITLE  conetne");
-
-     */
-
-  }
 }

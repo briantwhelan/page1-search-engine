@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 /*
 @Author :Mingwei Shi
@@ -172,7 +170,7 @@ public class ProcessingFromTopicParser {
 
 
 	public void run() {
-		QueryParser my = new QueryParser();
+		myQueryParser my = new myQueryParser();
 
 		List<Query> local = my.parseQueries();
 		ArrayList<String> OutputList = new ArrayList<>();

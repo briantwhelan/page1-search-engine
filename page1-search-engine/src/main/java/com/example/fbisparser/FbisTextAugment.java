@@ -54,7 +54,7 @@ public class FbisTextAugment {
 
 		String removeMoneySymbolString = matcherforMoney.replaceAll("");
 
-		// Remove |
+		// Remove
 
 		Pattern patternPipeCharater = Pattern.compile("\\|");
 
@@ -74,7 +74,8 @@ public class FbisTextAugment {
 
 		String removeMultiSpaceAgain = removealComma.replaceAll("\\s+", " ");
 		String finalStringText = removeMultiSpaceAgain;
+			//Rmoeve all puncatation
 
-		return finalStringText;
+		return finalStringText.replaceAll("\\p{Punct}", "");
 	}
 }

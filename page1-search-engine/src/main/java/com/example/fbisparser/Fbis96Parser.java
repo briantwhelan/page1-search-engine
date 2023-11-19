@@ -106,10 +106,10 @@ public class Fbis96Parser {
 
 				FbisTextAugment myTextAugment = new FbisTextAugment(textContent);
 				String finalStringText = myTextAugment.augmentString();
-				System.out.println("________________");
+			//	System.out.println("________________");
 				// System.out.println(finalStringText);
 
-				Fbis95Structure tempStructure = new Fbis95Structure(docnoContent, titleContent, finalStringText);
+				Fbis95Structure tempStructure = new Fbis95Structure(docnoContent, titleContent, textContent);
 				myFbisContainer.add(tempStructure);
 			}
 		}

@@ -1,0 +1,1 @@
+./trec_eval-9.0.7/trec_eval  -m  map ./qrels.assignment2.part1 ./page1-search-engine/result.txt
