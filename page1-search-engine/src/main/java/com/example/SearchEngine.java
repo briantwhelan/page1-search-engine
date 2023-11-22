@@ -1,13 +1,6 @@
 package com.example;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.core.SimpleAnalyzer;
-import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.search.similarities.BM25Similarity;
-import org.apache.lucene.search.similarities.ClassicSimilarity;
-import org.apache.lucene.search.similarities.Similarity;
+
 
 /**
  * SearchEngine indexes and searches documents.
@@ -16,31 +9,29 @@ public class SearchEngine {
   private static final String INDEX_DIRECTORY = "./index";
 
   // Analyzers to use.
-  private static final Analyzer[] analyzers = {
-    new StandardAnalyzer(), // splits tokens at punctuation, whitespace and lowercases.
-    new WhitespaceAnalyzer(), // splits tokens at whitespace.
-    new EnglishAnalyzer(), // splits tokens punctuation, whitespace, lowercases 
-    // and removes English stop words.
-    new SimpleAnalyzer(), // splits tokens at non-alphanumeric characters and lowercases.
+  private static final String[] ANALYZERS = {
+          "EnglishAnalyzer"  // "StandardAnalyzer", "WhitespaceAnalyzer","SimpleAnalyzer"
   };
-
-   // Scorers to use.  
-  private static final Similarity[] scorers = {
-    new ClassicSimilarity(),
-    new BM25Similarity(),
+  private static final String[] SCORER = {
+          "LMDirichletSimilarity", "BM25_ClassicSimilarity" , "Classic_LMDirichletSimilarity", "BM25_LMDirichletSimilarity"//,"BM25Similarity", "ClassicSimilarity", "BooleanSimilarity",
   };
   /**
    * Main method for SearchEngine.
    */
   public static void main(String[] args) throws Exception {
     Indexer indexer = new Indexer();
-     // Use all analyzer-scorer combinations.
-    for (Analyzer analyzer : analyzers) {
-      for (Similarity scorer : scorers) {
-        indexer.indexDocuments(INDEX_DIRECTORY, analyzer, scorer);
-        Querier querier = new Querier("./data/topics/topics.txt");
-        querier.queryIndex(INDEX_DIRECTORY, analyzer, scorer);
+    try {
+      for (String analyzerType : ANALYZERS) {
+        for (String scorer : SCORER) {
+          indexer.indexDocuments(INDEX_DIRECTORY, analyzerType, scorer);
+          Querier querier = new Querier("./data/topics/topics.txt");
+          querier.queryIndex(INDEX_DIRECTORY, analyzerType, scorer);
+        }
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+
   }
 }
+

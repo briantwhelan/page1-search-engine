@@ -11,6 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
@@ -19,7 +23,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.search.similarities.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
@@ -47,17 +51,19 @@ public class Querier {
   /**
    * Queries the documents with the given analyzer and scorer.
    * @param indexDirectory Path to the index directory.
-   * @param analyzer Analyzer to use for querying.
-   * @param scorer Similarity to use for querying.
+   * @param analyzerName(analyzer) Analyzer to use for querying.
+   * @param scorerName(scorer) Similarity to use for querying.
    * @throws Exception exception.
    */
-  public void queryIndex(String indexDirectory, Analyzer analyzer, Similarity scorer) throws Exception {
+  public void queryIndex(String indexDirectory, String analyzerName, String scorerName) throws Exception {
     System.out.println("Querying index at '" + indexDirectory + "'...");
-    String analyzerName = analyzer.getClass().getName()
-            .substring(analyzer.getClass().getName().lastIndexOf('.') + 1);
-    String scorerName = scorer.getClass().getName()
-            .substring(scorer.getClass().getName().lastIndexOf('.') + 1);
-    File fout = new File("./results/" + analyzerName + "-" + scorerName);
+//    String analyzerName = analyzer.getClass().getName()
+//            .substring(analyzer.getClass().getName().lastIndexOf('.') + 1);
+//    String scorerName = scorer.getClass().getName()
+//            .substring(scorer.getClass().getName().lastIndexOf('.') + 1);
+    Analyzer analyzer = get_Analyzer(analyzerName);
+    Similarity scorer = get_Similarity(scorerName);
+    File fout = new File("./results/" + analyzerName + "-" + scorerName+ ".txt");
     FileOutputStream fos = new FileOutputStream(fout);
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 
@@ -73,15 +79,15 @@ public class Querier {
       for (ScoreDoc sd : results.scoreDocs) {
         // Output in trec_eval format - see http://www.rafaelglater.com/en/post/learn-how-to-use-trec_eval-to-evaluate-your-information-retrieval-system.
         // Format: query-id Q0 document-id rank score STANDARD
-        queryResults += queryID + " Q0 " + (searcher.doc(sd.doc).get(DOC_NO)) + " " 
-          + rank + " " + sd.score + " " + analyzerName + "-" + scorerName + "\n";
+        queryResults += queryID + " Q0 " + (searcher.doc(sd.doc).get(DOC_NO)) + " "
+                + rank + " " + sd.score + " " + analyzerName + "-" + scorerName + "\n";
         rank++;
       }
       bw.write(queryResults);
       queryID++;
     }
     bw.close();
-    System.out.println("Queried index with " + analyzerName + " and " + scorerName + " results saved to '"  + fout.getPath() + "'.");
+    System.out.println("Queried index with " + analyzerName + " and " + scorerName + " results saved to '"  + fout.getPath() + "'.\n");
   }
 
   /**
@@ -119,8 +125,8 @@ public class Querier {
    * @param analyzer Analyzer to use for searching.
    * @throws Exception exception.
    */
-  private static TopDocs search(String term, IndexSearcher searcher, 
-      Analyzer analyzer) throws Exception {
+  private static TopDocs search(String term, IndexSearcher searcher,
+                                Analyzer analyzer) throws Exception {
     // Use specified analyzer to parse query.
     QueryParser qp = createQueryParser(analyzer);
     qp.setAllowLeadingWildcard(true);
@@ -132,4 +138,28 @@ public class Querier {
     TopDocs topDocs = searcher.search(query, TOP_DOCS_LIMIT);
     return topDocs;
   }
+
+  private static Analyzer get_Analyzer(String analyzerType) {
+    return switch (analyzerType) {
+      case "EnglishAnalyzer" -> new EnglishAnalyzer();
+      case "StandardAnalyzer" -> new StandardAnalyzer();
+      case "WhitespaceAnalyzer" -> new WhitespaceAnalyzer();
+      case "SimpleAnalyzer" -> new SimpleAnalyzer();
+      default -> throw new IllegalArgumentException("Unknown analyzer type: " + analyzerType);
+    };
+  }
+  private static Similarity get_Similarity(String scorer) {
+    return switch (scorer) {
+      case "BM25Similarity" -> new BM25Similarity();
+      case "LMDirichletSimilarity" -> new LMDirichletSimilarity();
+      case "ClassicSimilarity" -> new ClassicSimilarity();
+      case "BooleanSimilarity" -> new BooleanSimilarity();
+      case "Classic_LMDirichletSimilarity" -> new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new LMDirichletSimilarity()});
+      case "BM25_ClassicSimilarity" -> new MultiSimilarity(new Similarity[]{new BM25Similarity(), new ClassicSimilarity()});
+      case "BM25_LMDirichletSimilarity" -> new MultiSimilarity(new Similarity[]{new BM25Similarity(), new LMDirichletSimilarity()});
+      default -> throw new IllegalArgumentException("Unknown analyzer type: " + scorer);
+      //
+    };
+  }
+
 }

@@ -12,13 +12,17 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.search.similarities.*;
 import org.apache.lucene.store.FSDirectory;
 
 public class Indexer {
@@ -74,35 +78,60 @@ public class Indexer {
     }
   }
 
-  public void indexDocuments(String indexDirectory, Analyzer analyzer, Similarity scorer) throws IOException {
-    String analyzerName = analyzer.getClass().getName()
-            .substring(analyzer.getClass().getName().lastIndexOf('.') + 1);
-    String scorerName = scorer.getClass().getName()
-            .substring(scorer.getClass().getName().lastIndexOf('.') + 1);
-    System.out.println("Indexing documents with " + analyzerName + " and " + scorerName + "...");
-    IndexWriter indexWriter = createWriter(indexDirectory, analyzer, scorer);
+  public void indexDocuments(String indexDirectory, String analyzerType, String scorer) throws IOException {
+//    String analyzerName = analyzer.getClass().getName()
+//            .substring(analyzer.getClass().getName().lastIndexOf('.') + 1);
+//    String scorerName = scorer.getClass().getName()
+//            .substring(scorer.getClass().getName().lastIndexOf('.') + 1);
+    Analyzer analyzer = get_Analyzer(analyzerType);
+    Similarity a_scorer = get_Similarity(scorer);
+
+    System.out.println("Indexing documents with " + analyzerType + " and " + scorer + "...");
+    IndexWriter indexWriter = createWriter(indexDirectory, analyzer, a_scorer);
     indexWriter.forceMerge(100000);
     indexWriter.addDocuments(this.allLuceneDocuments);
     indexWriter.close();
-    System.out.println("Indexed documents with " + analyzerName + " and " + scorerName
-    + " and stored to directory " + indexDirectory + ".");
+    System.out.println("Indexed documents with " + analyzerType + " and " + scorer
+            + " and stored to directory " + indexDirectory + ".");
   }
 
-   /**
+  /**
    * Creates an IndexWriter with the given analyzer and scorer.
    *
    * @param analyzer Analyzer to use for indexing.
    * @param scorer Similarity to use for indexing.
    * @return IndexWriter object.
    */
-  private static IndexWriter createWriter(String indexDirectory, Analyzer analyzer, 
-      Similarity similarity) throws IOException {
+  private static IndexWriter createWriter(String indexDirectory, Analyzer analyzer,
+                                          Similarity similarity) throws IOException {
     IndexWriterConfig config = new IndexWriterConfig(analyzer);
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
     config.setMaxBufferedDocs(100000);
     config.setSimilarity(similarity);
     FSDirectory dir = FSDirectory.open(Paths.get(indexDirectory));
-    IndexWriter writer = new IndexWriter(dir, config);
-    return writer;
+    return new IndexWriter(dir, config);
+  }
+
+  private static Analyzer get_Analyzer(String analyzerType) {
+    return switch (analyzerType) {
+      case "EnglishAnalyzer" -> new EnglishAnalyzer();
+      case "StandardAnalyzer" -> new StandardAnalyzer();
+      case "WhitespaceAnalyzer" -> new WhitespaceAnalyzer();
+      case "SimpleAnalyzer" -> new SimpleAnalyzer();
+      default -> throw new IllegalArgumentException("Unknown analyzer type: " + analyzerType);
+    };
+  }
+  private static Similarity get_Similarity(String scorer) {
+    return switch (scorer) {
+      case "BM25Similarity" -> new BM25Similarity();
+      case "LMDirichletSimilarity" -> new LMDirichletSimilarity();
+      case "ClassicSimilarity" -> new ClassicSimilarity();
+      case "BooleanSimilarity" -> new BooleanSimilarity();
+      case "Classic_LMDirichletSimilarity" -> new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new LMDirichletSimilarity()});
+      case "BM25_ClassicSimilarity" -> new MultiSimilarity(new Similarity[]{new BM25Similarity(), new ClassicSimilarity()});
+      case "BM25_LMDirichletSimilarity" -> new MultiSimilarity(new Similarity[]{new BM25Similarity(), new LMDirichletSimilarity()});
+      default -> throw new IllegalArgumentException("Unknown analyzer type: " + scorer);
+      //
+    };
   }
 }
