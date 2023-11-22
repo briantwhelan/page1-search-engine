@@ -10,10 +10,11 @@ public class SearchEngine {
 
   // Analyzers to use.
   private static final String[] ANALYZERS = {
-          "EnglishAnalyzer"  // "StandardAnalyzer", "WhitespaceAnalyzer","SimpleAnalyzer"
+          "EnglishAnalyzer" , "StandardAnalyzer", "WhitespaceAnalyzer", "SimpleAnalyzer"
   };
   private static final String[] SCORER = {
-          "LMDirichletSimilarity", "BM25_ClassicSimilarity" , "Classic_LMDirichletSimilarity", "BM25_LMDirichletSimilarity"//,"BM25Similarity", "ClassicSimilarity", "BooleanSimilarity",
+          "LMDirichletSimilarity", "BM25_ClassicSimilarity" , "Classic_LMDirichletSimilarity", "BM25_LMDirichletSimilarity",
+          "BM25Similarity", "ClassicSimilarity", "BooleanSimilarity",
   };
   /**
    * Main method for SearchEngine.
