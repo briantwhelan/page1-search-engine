@@ -21,10 +21,18 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.FSDirectory;
 
+import java.util.Collections;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.ArrayList;
+
+
 public class Indexer {
-  public static final String FT_PATH = "./data/ft";
-  public static final String LATIMES_PATH = "./data/latimes";
-  public static final String FR_PATH = "./data/fr94";
+  public static final String FT_PATH = "./page1-search-engine/data/ft";
+  public static final String LATIMES_PATH = "./page1-search-engine/data/latimes";
+  public static final String FR_PATH = "./page1-search-engine/data/fr94";
 
   private final String DOC_NO = "docno";
   private final String TITLE = "title";
@@ -73,7 +81,42 @@ public class Indexer {
       this.allLuceneDocuments.add(doc);
     }
   }
+  public void indexAllDocuments(String indexDirectory, Analyzer analyzer, Similarity scorer) throws Exception {
+    ExecutorService executorService = Executors.newFixedThreadPool(4);
 
+
+    executorService.submit(() -> {
+      try {
+        indexDocuments(indexDirectory, analyzer, scorer);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }); // FBIS
+    executorService.submit(() -> {
+      try {
+        indexDocuments(indexDirectory, analyzer, scorer);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }); // FT
+    executorService.submit(() -> {
+      try {
+        indexDocuments(indexDirectory, analyzer, scorer);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }); // FR
+    executorService.submit(() -> {
+      try {
+        indexDocuments(indexDirectory, analyzer, scorer);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }); // LATIMES
+
+    executorService.shutdown();
+    executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+  }
   public void indexDocuments(String indexDirectory, Analyzer analyzer, Similarity scorer) throws IOException {
     String analyzerName = analyzer.getClass().getName()
             .substring(analyzer.getClass().getName().lastIndexOf('.') + 1);
@@ -85,18 +128,21 @@ public class Indexer {
     indexWriter.addDocuments(this.allLuceneDocuments);
     indexWriter.close();
     System.out.println("Indexed documents with " + analyzerName + " and " + scorerName
-    + " and stored to directory " + indexDirectory + ".");
+            + " and stored to directory " + indexDirectory + ".");
   }
-
-   /**
+//  public static void createIndex(AnalyzerType analyzerEnum, SimilarityType similarityEnum) throws Exception{
+//    long startTime = System.currentTimeMillis()
+//
+//  }
+  /**
    * Creates an IndexWriter with the given analyzer and scorer.
    *
    * @param analyzer Analyzer to use for indexing.
-   * @param scorer Similarity to use for indexing.
+   * @param similarity Similarity to use for indexing.
    * @return IndexWriter object.
    */
-  private static IndexWriter createWriter(String indexDirectory, Analyzer analyzer, 
-      Similarity similarity) throws IOException {
+  private static IndexWriter createWriter(String indexDirectory, Analyzer analyzer,
+                                          Similarity similarity) throws IOException {
     IndexWriterConfig config = new IndexWriterConfig(analyzer);
     config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
     config.setMaxBufferedDocs(100000);
