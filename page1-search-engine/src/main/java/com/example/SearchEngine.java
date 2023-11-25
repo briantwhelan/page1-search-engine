@@ -39,11 +39,11 @@ public class SearchEngine {
    */
   public static void main(String[] args) throws Exception {
     Indexer indexer = new Indexer();
-    // Use all analyzer-scorer combinations.
+     // Use all analyzer-scorer combinations.
     for (Analyzer analyzer : analyzers) {
       for (Similarity scorer : scorers) {
         indexer.indexAllDocuments(INDEX_DIRECTORY, analyzer, scorer);
-        Querier querier = new Querier("./page1-search-engine/data/topics/topics.txt");
+        Querier querier = new Querier("./data/topics/topics.txt");
         querier.queryIndex(INDEX_DIRECTORY, analyzer, scorer);
       }
     }

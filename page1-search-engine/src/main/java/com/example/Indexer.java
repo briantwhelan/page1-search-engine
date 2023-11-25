@@ -30,9 +30,9 @@ import java.util.ArrayList;
 
 
 public class Indexer {
-  public static final String FT_PATH = "./page1-search-engine/data/ft";
-  public static final String LATIMES_PATH = "./page1-search-engine/data/latimes";
-  public static final String FR_PATH = "./page1-search-engine/data/fr94";
+  public static final String FT_PATH = "./data/ft";
+  public static final String LATIMES_PATH = "./data/latimes";
+  public static final String FR_PATH = "./data/fr94";
 
   private final String DOC_NO = "docno";
   private final String TITLE = "title";
@@ -130,15 +130,12 @@ public class Indexer {
     System.out.println("Indexed documents with " + analyzerName + " and " + scorerName
             + " and stored to directory " + indexDirectory + ".");
   }
-//  public static void createIndex(AnalyzerType analyzerEnum, SimilarityType similarityEnum) throws Exception{
-//    long startTime = System.currentTimeMillis()
-//
-//  }
+
   /**
    * Creates an IndexWriter with the given analyzer and scorer.
    *
    * @param analyzer Analyzer to use for indexing.
-   * @param similarity Similarity to use for indexing.
+   * @param scorer Similarity to use for indexing.
    * @return IndexWriter object.
    */
   private static IndexWriter createWriter(String indexDirectory, Analyzer analyzer,
