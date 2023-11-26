@@ -30,6 +30,10 @@ import java.util.ArrayList;
 
 
 public class Indexer {
+  private ArrayList<Document> fbisDocuments;
+  private ArrayList<Document> ftDocuments;
+  private ArrayList<Document> frDocuments;
+  private ArrayList<Document> laDocuments;
   public static final String FT_PATH = "./data/ft";
   public static final String LATIMES_PATH = "./data/latimes";
   public static final String FR_PATH = "./data/fr94";
@@ -38,99 +42,98 @@ public class Indexer {
   private final String TITLE = "title";
   private final String CONTENT = "content";
 
-  private ArrayList<Document> allLuceneDocuments;
+  //private ArrayList<Document> allLuceneDocuments;
 
   public Indexer() throws IOException {
-    this.allLuceneDocuments = new ArrayList<>();
-    // FBIS.
+    fbisDocuments = new ArrayList<>();
+    ftDocuments = new ArrayList<>();
+    frDocuments = new ArrayList<>();
+    laDocuments = new ArrayList<>();
+
+    // FBIS
     Fbis96Parser myFbisParser = new Fbis96Parser();
     myFbisParser.loadFiles();
-    ArrayList<Fbis95Structure> fbisDocuments = myFbisParser.getMyFbisContainer();
-    for (Fbis95Structure d : fbisDocuments) {
+    for (Fbis95Structure d : myFbisParser.getMyFbisContainer()) {
       Document doc = new Document();
       doc.add(new StringField(DOC_NO, d.getDocno(), Field.Store.YES));
       doc.add(new TextField(TITLE, d.getTitle(), Field.Store.YES));
       doc.add(new TextField(CONTENT, d.getText(), Field.Store.YES));
-      this.allLuceneDocuments.add(doc);
+      fbisDocuments.add(doc);
     }
     // Financial Times.
-    ArrayList<FinancialTimesDocument> ftDocuments = FinancialTimesReader.readDocuments(FT_PATH);
-    for (FinancialTimesDocument d : ftDocuments) {
+    for (FinancialTimesDocument d : FinancialTimesReader.readDocuments(FT_PATH)) {
       Document doc = new Document();
       doc.add(new StringField(DOC_NO, d.getNumber(), Field.Store.YES));
       doc.add(new TextField(TITLE, d.getHeadline(), Field.Store.YES));
       doc.add(new TextField(CONTENT, d.getText(), Field.Store.YES));
-      this.allLuceneDocuments.add(doc);
+      ftDocuments.add(doc);
     }
     // Federal Register.
-    ArrayList<FederalRegisterDocument> frDocuments = FederalRegisterReader.readDocuments(FR_PATH);
-    for (FederalRegisterDocument d : frDocuments) {
+    for (FederalRegisterDocument d : FederalRegisterReader.readDocuments(FR_PATH)) {
       Document doc = new Document();
       doc.add(new StringField(DOC_NO, d.getNumber(), Field.Store.YES));
       doc.add(new TextField(TITLE, d.getTitle(), Field.Store.YES));
       doc.add(new TextField(CONTENT, d.getText(), Field.Store.YES));
-      this.allLuceneDocuments.add(doc);
+      frDocuments.add(doc);
     }
     // LA Times.
-    ArrayList<LosAngelesTimesDocument> laDocuments = LosAngelesTimesReader.readDocuments(LATIMES_PATH);
-    for (LosAngelesTimesDocument d : laDocuments) {
+    for (LosAngelesTimesDocument d : LosAngelesTimesReader.readDocuments(LATIMES_PATH)) {
       Document doc = new Document();
       doc.add(new StringField(DOC_NO, d.getNumber(), Field.Store.YES));
       doc.add(new TextField(TITLE, d.getHeadline(), Field.Store.YES));
       doc.add(new TextField(CONTENT, d.getText(), Field.Store.YES));
-      this.allLuceneDocuments.add(doc);
+      laDocuments.add(doc);
     }
   }
   public void indexAllDocuments(String indexDirectory, Analyzer analyzer, Similarity scorer) throws Exception {
     ExecutorService executorService = Executors.newFixedThreadPool(4);
 
+    executorService.submit(() -> {
+      try {
+        indexDocuments(indexDirectory, analyzer, scorer, fbisDocuments);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    });
 
     executorService.submit(() -> {
       try {
-        indexDocuments(indexDirectory, analyzer, scorer);
+        indexDocuments(indexDirectory, analyzer, scorer, ftDocuments);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
-    }); // FBIS
+    });
+
     executorService.submit(() -> {
       try {
-        indexDocuments(indexDirectory, analyzer, scorer);
+        indexDocuments(indexDirectory, analyzer, scorer, frDocuments);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
-    }); // FT
+    });
+
     executorService.submit(() -> {
       try {
-        indexDocuments(indexDirectory, analyzer, scorer);
+        indexDocuments(indexDirectory, analyzer, scorer, laDocuments);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
-    }); // FR
-    executorService.submit(() -> {
-      try {
-        indexDocuments(indexDirectory, analyzer, scorer);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }); // LATIMES
+    });
 
     executorService.shutdown();
     executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
   }
-  public void indexDocuments(String indexDirectory, Analyzer analyzer, Similarity scorer) throws IOException {
-    String analyzerName = analyzer.getClass().getName()
-            .substring(analyzer.getClass().getName().lastIndexOf('.') + 1);
-    String scorerName = scorer.getClass().getName()
-            .substring(scorer.getClass().getName().lastIndexOf('.') + 1);
-    System.out.println("Indexing documents with " + analyzerName + " and " + scorerName + "...");
+
+  public void indexDocuments(String indexDirectory, Analyzer analyzer, Similarity scorer, List<Document> documents) throws IOException {
+    String analyzerName = analyzer.getClass().getSimpleName();
+    String scorerName = scorer.getClass().getSimpleName();
+    System.out.println("Indexing documents with " + analyzerName + " and " + scorerName + "with");
     IndexWriter indexWriter = createWriter(indexDirectory, analyzer, scorer);
-    indexWriter.forceMerge(100000);
-    indexWriter.addDocuments(this.allLuceneDocuments);
+    indexWriter.addDocuments(documents);
     indexWriter.close();
-    System.out.println("Indexed documents with " + analyzerName + " and " + scorerName
+    System.out.println("Indexed " + documents.size() + " documents with " + analyzerName + " and " + scorerName
             + " and stored to directory " + indexDirectory + ".");
   }
-
   /**
    * Creates an IndexWriter with the given analyzer and scorer.
    *
