@@ -19,6 +19,7 @@ public class SearchEngine {
 
   // Analyzers to use.
   private static final Analyzer[] analyzers = {
+          new GeneralizedCustomAnalyzer(),
           new StandardAnalyzer(), // splits tokens at punctuation, whitespace and lowercases.
           new WhitespaceAnalyzer(), // splits tokens at whitespace.
           new EnglishAnalyzer(), // splits tokens punctuation, whitespace, lowercases
@@ -33,13 +34,16 @@ public class SearchEngine {
           new BM25Similarity(),
           new LMDirichletSimilarity(),
           new LMJelinekMercerSimilarity(0.7f),
+          new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new BM25Similarity()}),
+          new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new LMDirichletSimilarity()}),
+          new MultiSimilarity(new Similarity[]{new BM25Similarity(), new LMDirichletSimilarity()})
   };
   /**
    * Main method for SearchEngine.
    */
   public static void main(String[] args) throws Exception {
     Indexer indexer = new Indexer();
-     // Use all analyzer-scorer combinations.
+    // Use all analyzer-scorer combinations.
     for (Analyzer analyzer : analyzers) {
       for (Similarity scorer : scorers) {
         indexer.indexAllDocuments(INDEX_DIRECTORY, analyzer, scorer);
