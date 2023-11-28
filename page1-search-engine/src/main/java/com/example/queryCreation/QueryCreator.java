@@ -9,9 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 /*
 @Author: Mingwei Shi
 
@@ -136,84 +134,7 @@ public class QueryCreator {
 	public ArrayList<String> createQueries() {
 		ArrayList<String> queries = new ArrayList<>();
 		for (Topic topic : this.topics) {
-			// Merge the string from title, narrative and description to
-			// form a full document
-			// in order to perform TF-IDF score
-			String finalString = topic.getTitle() + topic.getNarrative() + topic.getDescription();
-
-			String[] tokenizedKeywords = stringRemovalNoiseAndToken(finalString);
-			List<String> tokenizedKeywordsList = Arrays.asList(tokenizedKeywords);
-			TFIDFCalculator calculator = new TFIDFCalculator();
-			// compute  the each one TFIDF score
-			// we have score and associated  term
-			ArrayList<Double> scoreForTFIDF = new ArrayList<Double>();
-			ArrayList<StructureForTDIDFStorage> myStorageStucture = new ArrayList<>();
-
-			for (int indexIDF = 0; indexIDF < tokenizedKeywordsList.size(); indexIDF++) {
-				String currentTerm = tokenizedKeywordsList.get(indexIDF);
-				double currentTFIDFScire = calculator.tfIdf(tokenizedKeywordsList, currentTerm);
-				scoreForTFIDF.add(currentTFIDFScire);
-				StructureForTDIDFStorage tempS = new StructureForTDIDFStorage(currentTFIDFScire, currentTerm);
-				myStorageStucture.add(tempS);
-
-			}
-			// Sorting in descending order
-			Collections.sort(scoreForTFIDF);
-			Collections.reverse(scoreForTFIDF);
-
-			ArrayList<Double> firstFiveScore = new ArrayList<>();
-			// top 10
-			int topKeywords = 13;
-			for (int getIndex = 0; getIndex < topKeywords; getIndex++) {
-				firstFiveScore.add(scoreForTFIDF.get(getIndex));
-			}
-			//
-			/*
-			 * Remove unique value
-			 * https://stackoverflow.com/questions/13429119/get-unique-values-from-arraylist
-			 * -in-java
-			 */
-			ArrayList<Double> uniqueList = (ArrayList) firstFiveScore.stream().distinct().collect(Collectors.toList());
-			// Comparere
-			// myStorageStucture
-			StringBuilder currentKeywordsBulder = new StringBuilder();
-			ArrayList<String> finalKeyword = new ArrayList<>();
-			for (int indexUnique = 0; indexUnique < uniqueList.size(); indexUnique++) {
-				double valueT = uniqueList.get(indexUnique);
-				for (int indexForStruoew = 0; indexForStruoew < myStorageStucture.size(); indexForStruoew++) {
-
-					double doubelForStore = myStorageStucture.get(indexForStruoew).getTdidfScore();
-					Double d1 = valueT;
-					Double d2 = doubelForStore;
-					if (Double.compare(d1, d2) == 0) {
-
-						String currentKeywodsToAdd = myStorageStucture.get(indexForStruoew).getKeywordTerms();
-
-						finalKeyword.add(currentKeywodsToAdd);
-
-					}
-				}
-			}
-			// unique
-			/*
-			 * Remove unique value
-			 * https://stackoverflow.com/questions/13429119/get-unique-values-from-arraylist
-			 * -in-java
-			 */
-			ArrayList<String> uniqueListKeywords = (ArrayList) finalKeyword.stream().distinct()
-					.collect(Collectors.toList());
-			// StringBuilder currentKeywordsBulder = new StringBuilder();
-			for (int indexKeyowrdL = 0; indexKeyowrdL < uniqueListKeywords.size(); indexKeyowrdL++) {
-				String keyworT = uniqueListKeywords.get(indexKeyowrdL);
-				currentKeywordsBulder.append(keyworT);
-				currentKeywordsBulder.append(" ");
-			}
-			String finalStringCurrent = currentKeywordsBulder.toString();
-
-			queries.add(finalStringCurrent.trim());
-
-
-
+			queries.add(topic.getTitle().trim());
 		}
 		String filePath = "./data/queries/queries.txt";
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
